@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using EmployeeManaging.Domain.EmployeeAggregate;
-using EmployeeManaging.Domain.Services;
 
 namespace EmployeeManaging.Domain.Commands
 {
@@ -9,18 +8,18 @@ namespace EmployeeManaging.Domain.Commands
         private readonly IEmployeeRepository employeeRepository;
         //private readonly IMediator mediator;
         //private readonly ILogger<CreateEmployeeCommandHandler> logger;
-        private readonly IRegistrationService registrationService;
+        private readonly IKeyGeneratorStrategy keyGeneratorStrategy;
 
         public CreateEmployeeCommandHandler(//IMediator mediator,
             IEmployeeRepository employeeRepository,
             //ILogger<CreateEmployeeCommandHandler> logger
-            IRegistrationService registrationService
+            IKeyGeneratorStrategy keyGeneratorStrategy
             )
         {
             this.employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
             //this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             //this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.registrationService = registrationService ?? throw new ArgumentNullException(nameof(registrationService));
+            this.keyGeneratorStrategy = keyGeneratorStrategy ?? throw new ArgumentNullException(nameof(keyGeneratorStrategy));
         }
 
         public async Task<bool> Handle(CreateEmployeeCommand command, CancellationToken cancellationToken)
@@ -34,7 +33,8 @@ namespace EmployeeManaging.Domain.Commands
 
             try
             {
-                var registrationNumber = registrationService.GetCurrentRegistrationNumberAndLock();
+                var registrationNumberGenerator = keyGeneratorStrategy.GetKeyGenerator<RegistrationNumber>();
+                var registrationNumber = registrationNumberGenerator.GetNextKey();  
 
                 var employee = new Employee(
                     new Surname(command.EmployeeName),
@@ -54,7 +54,6 @@ namespace EmployeeManaging.Domain.Commands
             }
             finally
             {
-                registrationService.IncrementRegistrationNumberAndUnlock();
             }
 
             return result;

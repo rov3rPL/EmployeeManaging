@@ -1,10 +1,9 @@
-using EmployeeManaging.Domain.EmployeeAggregate;
-using EmployeeManaging.Domain.Services;
-using EmployeeManaging.Infrastructure.Repositories;
-using EmployeeManaging.Infrastructure.Services;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using MediatR;
+using EmployeeManaging.Domain.EmployeeAggregate;
+using EmployeeManaging.Infrastructure.Repositories;
+using EmployeeManaging.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +35,9 @@ builder.Services.AddDbContext<EmployeeManaging.Infrastructure.EmployeeContext>(x
 
 builder.Services.AddMediatR(Assembly.GetAssembly(typeof(EmployeeManaging.Domain.Commands.CreateEmployeeCommand))); //Assembly.GetExecutingAssembly());
 
-builder.Services.AddSingleton<IRegistrationService, RegistrationService>();
+builder.Services.AddScoped<IKeyGeneratorStrategy, KeyGeneratorStrategy>();
+builder.Services.AddSingleton<IEmployeeKeyGenerator, EmployeeKeyGenerator>();
+builder.Services.AddSingleton<IEmployeeHiLoRepository, EmployeeHiLoRepository>();
 
 
 var app = builder.Build();
