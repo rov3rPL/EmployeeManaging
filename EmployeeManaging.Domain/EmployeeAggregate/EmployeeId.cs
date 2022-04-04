@@ -13,10 +13,5 @@ namespace EmployeeManaging.Domain.EmployeeAggregate
 
             Value = id;
         }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
     }
 }

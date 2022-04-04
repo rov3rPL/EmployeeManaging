@@ -15,19 +15,6 @@ namespace EmployeeManaging.Domain.EmployeeAggregate
         public static IEnumerable<Gender> List() =>
             new[] { Male, Female };
 
-        public static Gender FromName(string name)
-        {
-            var gender = List()
-                .SingleOrDefault(s => String.Equals(s.Name, name, StringComparison.CurrentCultureIgnoreCase));
-
-            if (gender == null)
-            {
-                throw new InvalidCastException($"Possible values for Gender: {String.Join(",", List().Select(s => s.Name))}");
-            }
-
-            return gender;
-        }
-
         public static Gender From(int id)
         {
             var gender = List().SingleOrDefault(s => s.Id == id);

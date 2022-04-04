@@ -6,8 +6,6 @@ namespace EmployeeManaging.Domain.EmployeeAggregate
     {
         public Surname Surname { get; private set; }
         public Gender Gender { get; private set; }
-        private int _genderId; //To be used only by EmployeeEntityTypeConfiguration //TODO cr nie rozumiem. Nie używane. Może jednak niepotrzebne? Niekonsekwencja w nazewnictwie globalnych pól w projekcie: z "_" lub bez
-
         public RegistrationNumber RegistrationNo { get; private set; }
 
         protected Employee() { }
