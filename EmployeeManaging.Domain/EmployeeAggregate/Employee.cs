@@ -27,7 +27,7 @@ namespace EmployeeManaging.Domain.EmployeeAggregate
             this.RegistrationNo = regNo;
         }
 
-        public /*virtual*/ void Update(Surname name, Gender gender) //TODO cr skąd nagle virtual? W zadaniu piszę "Nie projektuj modelu z myślą o mechanizmach dostępu do danych (Entity Framework itp.). Stwórz jak najładniejszy model obiektowy patrząc tylko z punktu widzenia kodu.". Virtual bez uzasadnienia jest zaburzeniem poprawnego projektowania obiektów.
+        public void Update(Surname name, Gender gender) //[DONE, niepotrzebnie mockowałem pracownika] TODO cr skąd nagle virtual? W zadaniu piszę "Nie projektuj modelu z myślą o mechanizmach dostępu do danych (Entity Framework itp.). Stwórz jak najładniejszy model obiektowy patrząc tylko z punktu widzenia kodu.". Virtual bez uzasadnienia jest zaburzeniem poprawnego projektowania obiektów.
         {
             if (null == name)
                 throw new ArgumentNullException(nameof(name));

@@ -48,7 +48,7 @@ namespace EmployeeManaging.Tests.Domain.Commands
             //Assert
             Assert.True(result);
 
-            _employeeRepositoryMock.Verify(x => x.Update(It.IsAny<Employee>()),
+            _employeeRepositoryMock.Verify(x => x.Update(employee),
                 Times.Once());
 
             Assert.Equal(employee.Surname, newEmployeeName);

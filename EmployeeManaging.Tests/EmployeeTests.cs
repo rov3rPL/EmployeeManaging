@@ -21,7 +21,7 @@ namespace EmployeeManaging.Tests.Domain
         }
 
         [Fact]
-        public void UpdatingEmployeeName()
+        public void UpdatingEmployee()
         {
             var employee = new Employee(new Surname("old"), Gender.Male, new RegistrationNumber(12345678));
 
