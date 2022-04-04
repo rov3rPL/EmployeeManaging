@@ -27,7 +27,7 @@ namespace EmployeeManaging.Infrastructure.Repositories
 
         }
 
-        public async Task<Employee> GetAsync(int employeeId)
+        public async Task<Employee> GetAsync(EmployeeId employeeId)
         {
             var employee = await _context
                                 .Employees

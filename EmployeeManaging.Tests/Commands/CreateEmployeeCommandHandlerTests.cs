@@ -20,7 +20,7 @@ namespace EmployeeManaging.Tests.Domain.Commands
         public async Task RepositoryAddMethodIsCalled()
         {
             // Arrange
-            var fakeEmployeeCmd = new CreateEmployeeCommand("testName", 1);
+            var fakeEmployeeCmd = new CreateEmployeeCommand(new Surname("testName"), Gender.Male);
 
             _employeeRepositoryMock.Setup(x => x.Add(It.IsAny<Employee>()))
                 .Returns(It.IsAny<Employee>);
@@ -31,15 +31,12 @@ namespace EmployeeManaging.Tests.Domain.Commands
             _employeeRepositoryMock.Setup(x => x.UnitOfWork)
                 .Returns(_uowMock.Object);
 
-            var _employeeKeyGeneratorMock = new Mock<IEmployeeKeyGenerator>();
-            _employeeKeyGeneratorMock.Setup(x => x.GetNextKey())
-                .Returns(new RegistrationNumber("12345678"));
-            var _keyGeneratorStrategyMock = new Mock<IKeyGeneratorStrategy>();
-            _keyGeneratorStrategyMock.Setup(x => x.GetKeyGenerator<RegistrationNumber>())
-                .Returns(_employeeKeyGeneratorMock.Object);
+            var _registrationNumberProviderMock = new Mock<IRegistrationNumberProvider>();
+            _registrationNumberProviderMock.Setup(x => x.GetNextRegistrationNumber())
+                .Returns(new RegistrationNumber(12345678));
 
             //Act
-            var handler = new CreateEmployeeCommandHandler(_employeeRepositoryMock.Object, _keyGeneratorStrategyMock.Object);
+            var handler = new CreateEmployeeCommandHandler(_employeeRepositoryMock.Object, _registrationNumberProviderMock.Object);
             var result = await handler.Handle(fakeEmployeeCmd, new CancellationToken());
 
             //Assert

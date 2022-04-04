@@ -1,6 +1,6 @@
 ﻿namespace EmployeeManaging.Domain
 {
-    public interface IEmployeeHiLoRepository
+    public interface IRegistrationNumberCounterRepository
     {
         int GetNextHi();
     }

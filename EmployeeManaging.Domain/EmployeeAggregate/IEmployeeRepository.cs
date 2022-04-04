@@ -8,6 +8,6 @@ namespace EmployeeManaging.Domain.EmployeeAggregate
 
         void Update(Employee employee);
 
-        Task<Employee> GetAsync(int employeeId);
+        Task<Employee> GetAsync(EmployeeId employeeId);
     }
 }

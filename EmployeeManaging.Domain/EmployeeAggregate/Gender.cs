@@ -2,7 +2,7 @@
 
 namespace EmployeeManaging.Domain.EmployeeAggregate
 {
-    public class Gender : Enumeration
+    public class Gender : Enumeration //TODO cr nie wiem czy korzystałeś z jakiegoś gotowca, ale takie obsłużenie enuma to zdecydowany overkill
     {
         public static Gender Male = new Gender(1, nameof(Male).ToLowerInvariant());
         public static Gender Female = new Gender(2, nameof(Female).ToLowerInvariant());

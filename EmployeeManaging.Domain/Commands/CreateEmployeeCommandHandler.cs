@@ -6,56 +6,30 @@ namespace EmployeeManaging.Domain.Commands
     public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand, bool>
     {
         private readonly IEmployeeRepository employeeRepository;
-        //private readonly IMediator mediator;
-        //private readonly ILogger<CreateEmployeeCommandHandler> logger;
-        private readonly IKeyGeneratorStrategy keyGeneratorStrategy;
+        private readonly IRegistrationNumberProvider registrationNumberProvider;
 
-        public CreateEmployeeCommandHandler(//IMediator mediator,
+        public CreateEmployeeCommandHandler(
             IEmployeeRepository employeeRepository,
-            //ILogger<CreateEmployeeCommandHandler> logger
-            IKeyGeneratorStrategy keyGeneratorStrategy
+            IRegistrationNumberProvider registrationNumberProvider
             )
         {
             this.employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
-            //this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            //this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.keyGeneratorStrategy = keyGeneratorStrategy ?? throw new ArgumentNullException(nameof(keyGeneratorStrategy));
+            this.registrationNumberProvider = registrationNumberProvider ?? throw new ArgumentNullException(nameof(registrationNumberProvider));
         }
 
         public async Task<bool> Handle(CreateEmployeeCommand command, CancellationToken cancellationToken)
         {
-            // Add/Update the Employee aggregate root
-            // DDD patterns comment: Add child entities and value-objects through the Order Aggregate-Root
-            // methods and constructor so validations, invariants and business logic 
-            // make sure that consistency is preserved across the whole aggregate
-
             var result = false;
 
-            try
-            {
-                var registrationNumberGenerator = keyGeneratorStrategy.GetKeyGenerator<RegistrationNumber>();
-                var registrationNumber = registrationNumberGenerator.GetNextKey();  
+            var registrationNumber = registrationNumberProvider.GetNextRegistrationNumber();  
 
-                var employee = new Employee(
-                    new Surname(command.EmployeeName),
-                    Gender.From(command.GenderId),
-                    registrationNumber
-                );
+            var employee = new Employee(command.EmployeeName, command.Gender, registrationNumber);
 
-                //logger.LogInformation("----- Creating Employee - Employee: {@Employee}", employee);
+            employeeRepository.Add(employee);
 
-                employeeRepository.Add(employee);
-
-                result = await employeeRepository.UnitOfWork
-                    .SaveEntitiesAsync(cancellationToken);
-            }
-            catch (Exception ex) { //TODO: exception filtering and converting to business exceptions
-                throw ex;
-            }
-            finally
-            {
-            }
-
+            result = await employeeRepository.UnitOfWork
+                .SaveEntitiesAsync(cancellationToken);
+            
             return result;
         }
 

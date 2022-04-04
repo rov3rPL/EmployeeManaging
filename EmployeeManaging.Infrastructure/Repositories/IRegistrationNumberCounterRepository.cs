@@ -2,7 +2,7 @@
 
 namespace EmployeeManaging.Infrastructure.Repositories
 {
-    public class EmployeeHiLoRepository : IEmployeeHiLoRepository
+    public class RegistrationNumberCounterRepository : IRegistrationNumberCounterRepository
     {
         public int GetNextHi()
         {

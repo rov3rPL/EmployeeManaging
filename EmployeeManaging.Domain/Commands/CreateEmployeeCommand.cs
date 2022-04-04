@@ -1,22 +1,18 @@
 ﻿using System.Runtime.Serialization;
+using EmployeeManaging.Domain.EmployeeAggregate;
 using MediatR;
 
 namespace EmployeeManaging.Domain.Commands
 {
-    [DataContract]
-
     public class CreateEmployeeCommand : IRequest<bool>
     {
-        [DataMember]
-        public string EmployeeName { get; private set; }
+        public Surname EmployeeName { get; }
+        public Gender Gender { get; }
 
-        [DataMember]
-        public int GenderId { get; private set; }
-
-        public CreateEmployeeCommand(string name, int genderId)
+        public CreateEmployeeCommand(Surname employeeName, Gender gender)
         {
-            EmployeeName = name;
-            GenderId = genderId;
+            EmployeeName = employeeName;
+            Gender = gender;
         }
     }
 }

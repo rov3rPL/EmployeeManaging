@@ -2,17 +2,17 @@
 
 namespace EmployeeManaging.Domain.EmployeeAggregate
 {
-    public class Employee : Entity<int>, IAggregate
+    public class Employee : Entity<EmployeeId>, IAggregate
     {
         public Surname Surname { get; private set; }
         public Gender Gender { get; private set; }
-        private int _genderId; //To be used only by EmployeeEntityTypeConfiguration
+        private int _genderId; //To be used only by EmployeeEntityTypeConfiguration //TODO cr nie rozumiem. Nie używane. Może jednak niepotrzebne? Niekonsekwencja w nazewnictwie globalnych pól w projekcie: z "_" lub bez
 
         public RegistrationNumber RegistrationNo { get; private set; }
 
         protected Employee() { }
 
-        public Employee(Surname name, Gender gender, RegistrationNumber regNo) : this()
+        public Employee(Surname name, Gender gender, RegistrationNumber regNo) : this() //TODO cr this() niepotrzebne
         {
             if(null == name)
                 throw new ArgumentNullException(nameof(name));
@@ -27,7 +27,7 @@ namespace EmployeeManaging.Domain.EmployeeAggregate
             this.RegistrationNo = regNo;
         }
 
-        public virtual void Update(Surname name, Gender gender)
+        public /*virtual*/ void Update(Surname name, Gender gender) //TODO cr skąd nagle virtual? W zadaniu piszę "Nie projektuj modelu z myślą o mechanizmach dostępu do danych (Entity Framework itp.). Stwórz jak najładniejszy model obiektowy patrząc tylko z punktu widzenia kodu.". Virtual bez uzasadnienia jest zaburzeniem poprawnego projektowania obiektów.
         {
             if (null == name)
                 throw new ArgumentNullException(nameof(name));

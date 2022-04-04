@@ -35,9 +35,8 @@ builder.Services.AddDbContext<EmployeeManaging.Infrastructure.EmployeeContext>(x
 
 builder.Services.AddMediatR(Assembly.GetAssembly(typeof(EmployeeManaging.Domain.Commands.CreateEmployeeCommand))); //Assembly.GetExecutingAssembly());
 
-builder.Services.AddScoped<IKeyGeneratorStrategy, KeyGeneratorStrategy>();
-builder.Services.AddSingleton<IEmployeeKeyGenerator, EmployeeKeyGenerator>();
-builder.Services.AddSingleton<IEmployeeHiLoRepository, EmployeeHiLoRepository>();
+builder.Services.AddSingleton<IRegistrationNumberProvider, RegistrationNumberProvider>();
+builder.Services.AddSingleton<IRegistrationNumberCounterRepository, RegistrationNumberCounterRepository>();
 
 
 var app = builder.Build();

@@ -15,52 +15,14 @@ namespace EmployeeManaging.Tests.Domain.Commands
         }
 
         [Fact]
-        public async Task EmployeeUpdateMethodIsCalled()
-        {
-            // Arrange
-            var fakeEmployeeCmd = new UpdateEmployeeNameCommand(1, "testName", 2);
-
-            _employeeRepositoryMock.Setup(x => x.Update(It.IsAny<Employee>()))
-                ; //.Returns(It.IsAny<Employee>);
-
-            var _uowMock = new Mock<EmployeeManaging.Domain.SeedWork.IUnitOfWork>();
-            _uowMock.Setup(x => x.SaveEntitiesAsync(It.IsAny<CancellationToken>()))
-                .Returns(Task.FromResult(true));
-            _employeeRepositoryMock.Setup(x => x.UnitOfWork)
-                .Returns(_uowMock.Object);
-
-            var _employeeMock = new Mock<Employee>();
-            _employeeMock.Setup(x => x.Update(It.IsAny<Surname>(), It.IsAny<Gender>()))
-                ;
-
-            _employeeRepositoryMock.Setup(x => x.GetAsync(
-                It.IsAny<int>()
-                )
-            )
-            .Returns(Task.FromResult(_employeeMock.Object));
-
-            //Act
-            var handler = new UpdateEmployeeNameCommandHandler(_employeeRepositoryMock.Object);
-            var result = await handler.Handle(fakeEmployeeCmd, new CancellationToken());
-
-            //Assert
-            Assert.True(result);
-            
-            _employeeMock.Verify(x => x.Update(It.IsAny<Surname>(), It.IsAny<Gender>()),
-                Times.Once());
-
-            //TODO: check czy zmienił nazwę
-
-        }
-
-        [Fact]
         public async Task RepositoryUpdateMethodIsCalled()
         {
             // Arrange
-            var fakeEmployeeCmd = new UpdateEmployeeNameCommand(1, "testName", 2);
+            var newEmployeeName = new Surname("new name");
+            var newGender = Gender.Female;
+            var fakeEmployeeCmd = new UpdateEmployeeCommand(new EmployeeId(1), newEmployeeName, newGender);
 
-            _employeeRepositoryMock.Setup(x => x.Update(It.IsAny<Employee>()))
-                ; //.Returns(It.IsAny<Employee>);
+            _employeeRepositoryMock.Setup(x => x.Update(It.IsAny<Employee>()));
 
             var _uowMock = new Mock<EmployeeManaging.Domain.SeedWork.IUnitOfWork>();
             _uowMock.Setup(x => x.SaveEntitiesAsync(It.IsAny<CancellationToken>()))
@@ -68,17 +30,19 @@ namespace EmployeeManaging.Tests.Domain.Commands
             _employeeRepositoryMock.Setup(x => x.UnitOfWork)
                 .Returns(_uowMock.Object);
 
-            var _employeeMock = new Mock<Employee>();
-            //_employeeMock.Setup ...
+            var employee = new Employee(new Surname("old name"), Gender.Male, new RegistrationNumber(12345678));
 
             _employeeRepositoryMock.Setup(x => x.GetAsync(
-                It.IsAny<int>()
+                It.IsAny<EmployeeId>()
                 )
             )
-            .Returns(Task.FromResult(_employeeMock.Object));
+            .Returns(Task.FromResult(employee));
+
+            Assert.NotEqual(employee.Surname, newEmployeeName);
+            Assert.NotEqual(employee.Gender, newGender);
 
             //Act
-            var handler = new UpdateEmployeeNameCommandHandler(_employeeRepositoryMock.Object);
+            var handler = new UpdateEmployeeCommandHandler(_employeeRepositoryMock.Object);
             var result = await handler.Handle(fakeEmployeeCmd, new CancellationToken());
 
             //Assert
@@ -87,7 +51,8 @@ namespace EmployeeManaging.Tests.Domain.Commands
             _employeeRepositoryMock.Verify(x => x.Update(It.IsAny<Employee>()),
                 Times.Once());
 
-            //TODO: check czy zmienił nazwę
+            Assert.Equal(employee.Surname, newEmployeeName);
+            Assert.Equal(employee.Gender, newGender);
         }
     }
 }
